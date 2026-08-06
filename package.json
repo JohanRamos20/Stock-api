@@ -1,0 +1,30 @@
+{
+  "name": "stock-api",
+  "version": "1.0.0",
+  "description": "Sistema para controle de entrada, saída e movimentação de itens em um almoxarifado, permitindo o gerenciamento de estoque, requisições e histórico de movimentações. O projeto tem como objetivo substituir processos manuais (planilhas) por uma solução digital que traga rastreabilidade, redução de erros e acompanhamento sobre os níveis de estoque.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JohanRamos20/Stock-api.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/JohanRamos20/Stock-api/issues"
+  },
+  "homepage": "https://github.com/JohanRamos20/Stock-api#readme",
+  "devDependencies": {
+    "dotenv": "^17.4.2",
+    "prisma": "^7.9.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.9.1"
+  },
+  "allowScripts": {
+    "prisma@7.9.1": true,
+    "@prisma/engines@7.9.1": true
+  }
+}

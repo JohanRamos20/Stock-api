@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum Sector {
+  ACADEMICS
+  ADMINISTRATIVE
+}
+
+enum RequestStatus {
+  PENDING
+  COMPLETED
+  CANCELED
+}
+
+enum MaterialCategory {
+  FERRAMENTA
+  EPI
+  ELETRICO
+  HIDRAULICO
+  CONSUMIVEL
+  LIMPEZA
+}
+
+enum UnitType {
+  UNITY
+  BOX
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+  role     Role
+  sector   Sector
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  requests Request[]
+
+  @@map("users")
+}
+
+model Request {
+  id     String        @id @default(uuid())
+  userId String        @map("user_id")
+  user   User          @relation(fields: [userId], references: [id])
+  prazo  DateTime
+  status RequestStatus @default(PENDING)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  materials RequestMaterial[]
+
+  @@map("requests")
+}
+
+model Material {
+  id       String           @id @default(uuid())
+  name     String
+  category MaterialCategory
+  location String
+  amount   Int
+  unitType UnitType         @map("unit_type")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  requests RequestMaterial[]
+
+  @@map("materials")
+}
+
+model RequestMaterial {
+  id         String @id @default(uuid())
+  requestId  String @map("request_id")
+  materialId String @map("material_id")
+  quantity   Int
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  request  Request  @relation(fields: [requestId], references: [id])
+  material Material @relation(fields: [materialId], references: [id])
+
+  @@unique([requestId, materialId])
+  @@map("request_materials")
+}

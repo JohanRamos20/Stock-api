@@ -4,6 +4,11 @@
   "description": "Sistema para controle de entrada, saída e movimentação de itens em um almoxarifado, permitindo o gerenciamento de estoque, requisições e histórico de movimentações. O projeto tem como objetivo substituir processos manuais (planilhas) por uma solução digital que traga rastreabilidade, redução de erros e acompanhamento sobre os níveis de estoque.",
   "main": "index.js",
   "scripts": {
+    "dev": "tsx watch src/main/server.ts",
+    "build": "tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
+    "start": "node dist/src/main/server.js",
+    "typecheck": "tsc --noEmit",
+    "postinstall": "prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,14 +22,26 @@
   },
   "homepage": "https://github.com/JohanRamos20/Stock-api#readme",
   "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.13.3",
     "dotenv": "^17.4.2",
-    "prisma": "^7.9.1"
+    "prisma": "^7.9.1",
+    "tsc-alias": "^1.9.1",
+    "tsx": "^4.23.11",
+    "typescript": "^7.0.2"
   },
   "dependencies": {
-    "@prisma/client": "^7.9.1"
+    "@prisma/adapter-pg": "^7.9.1",
+    "@prisma/client": "^7.9.1",
+    "bcryptjs": "^3.0.3",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "zod": "^4.4.3"
   },
   "allowScripts": {
     "prisma@7.9.1": true,
-    "@prisma/engines@7.9.1": true
+    "@prisma/engines@7.9.1": true,
+    "esbuild@0.28.1": true
   }
 }

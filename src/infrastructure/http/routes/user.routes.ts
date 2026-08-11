@@ -8,7 +8,7 @@ const userController = makeUserController();
 userRoutes.post("/", userController.create);
 userRoutes.get("/", userController.list);
 userRoutes.get("/me", authMiddleware, userController.getById);
-userRoutes.patch("/password", userController.updatePassword);
+userRoutes.post("/password/reset", userController.resetPassword);
 userRoutes.post("/login", userController.login);
 
 export { userRoutes };

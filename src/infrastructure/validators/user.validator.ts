@@ -17,15 +17,10 @@ export const loginSchema = z.object({
 
 export type LoginDto = z.infer<typeof loginSchema>;
 
-export const updatePasswordSchema = z
-  .object({
-    email: z.string().trim().toLowerCase().email(),
-    currentPassword: z.string().min(1, "currentPassword is required"),
-    newPassword: z.string().min(8, "newPassword must have at least 8 characters"),
-  })
-  .refine((data) => data.currentPassword !== data.newPassword, {
-    message: "newPassword must be different from currentPassword",
-    path: ["newPassword"],
-  });
+export const resetPasswordSchema = z.object({
+  email: z.string().trim().toLowerCase().email(),
+  code: z.string().trim().min(1, "code is required"),
+  newPassword: z.string().min(8, "newPassword must have at least 8 characters"),
+});
 
-export type UpdatePasswordDto = z.infer<typeof updatePasswordSchema>;
+export type ResetPasswordDto = z.infer<typeof resetPasswordSchema>;

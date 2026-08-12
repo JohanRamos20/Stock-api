@@ -17,10 +17,16 @@ export const loginSchema = z.object({
 
 export type LoginDto = z.infer<typeof loginSchema>;
 
-export const resetPasswordSchema = z.object({
-  email: z.string().trim().toLowerCase().email(),
-  code: z.string().trim().min(1, "code is required"),
-  newPassword: z.string().min(8, "newPassword must have at least 8 characters"),
-});
+export const resetPasswordSchema = z
+  .object({
+    email: z.string().trim().toLowerCase().email(),
+    currentPassword: z.string().min(1, "currentPassword is required"),
+    newPassword: z.string().min(8, "newPassword must have at least 8 characters"),
+    confirmNewPassword: z.string().min(8, "confirmNewPassword must have at least 8 characters"),
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: "newPassword and confirmNewPassword must match",
+    path: ["confirmNewPassword"],
+  });
 
 export type ResetPasswordDto = z.infer<typeof resetPasswordSchema>;

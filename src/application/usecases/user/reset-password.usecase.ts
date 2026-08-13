@@ -13,12 +13,12 @@ export class ResetPasswordUseCase {
 
   async execute(input: ResetPasswordDto): Promise<void> {
     const user = await this.getUserByEmailUseCase.execute(input.email).catch((error) => {
-      if (error instanceof BusinessError) throw new BusinessError("Invalid current password", 401);
+      if (error instanceof BusinessError) throw new BusinessError("Invalid credentials", 401);
       throw error;
     });
 
     const isCurrentPasswordValid = await this.passwordHasher.compare(input.currentPassword, user.password);
-    if (!isCurrentPasswordValid) throw new BusinessError("Invalid current password", 401);
+    if (!isCurrentPasswordValid) throw new BusinessError("Invalid credentials", 401);
 
     const hashedPassword = await this.passwordHasher.hash(input.newPassword);
     await this.userRepository.updatePassword(user.id, hashedPassword);

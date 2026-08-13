@@ -1,3 +1,6 @@
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "public";
+
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('ADMIN', 'USER');
 
@@ -79,3 +82,4 @@ ALTER TABLE "request_materials" ADD CONSTRAINT "request_materials_request_id_fke
 
 -- AddForeignKey
 ALTER TABLE "request_materials" ADD CONSTRAINT "request_materials_material_id_fkey" FOREIGN KEY ("material_id") REFERENCES "materials"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+

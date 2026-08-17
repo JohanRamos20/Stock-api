@@ -19,8 +19,8 @@ export class PdfRequestUseCase {
       throw new BusinessError("You do not have permission to access this request", 403);
     }
 
-    if (request.status !== RequestStatus.COMPLETED) {
-      throw new BusinessError(`Cannot issue withdrawal slip for a request that is ${request.status}`, 409);
+    if (request.status === RequestStatus.CANCELED) {
+      throw new BusinessError("Cannot issue withdrawal slip for a canceled request", 409);
     }
 
     const requester = await this.userRepository.findById(request.userId);

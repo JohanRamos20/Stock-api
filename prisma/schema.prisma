@@ -29,10 +29,7 @@ enum RequestStatus {
 enum MaterialCategory {
   FERRAMENTA
   EPI
-  ELETRICO
-  HIDRAULICO
   CONSUMIVEL
-  LIMPEZA
 }
 
 enum UnitType {

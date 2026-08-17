@@ -24,7 +24,7 @@ export class LoginUseCase {
     const isPasswordValid = await this.passwordHasher.compare(input.password, user.password);
     if (!isPasswordValid) throw new BusinessError("Invalid credentials", 401);
 
-    const token = this.tokenService.sign({ id: user.id });
+    const token = this.tokenService.sign({ id: user.id, role: user.role });
 
     return { token, user: toUserResponseDto(user) };
   }

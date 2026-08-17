@@ -11,6 +11,7 @@ requestRoutes.post("/", authMiddleware, requestController.create);
 requestRoutes.get("/me", authMiddleware, requestController.listMine);
 requestRoutes.get("/all", authMiddleware, requireRole(UserRole.ADMIN), requestController.listAll);
 requestRoutes.get("/:id", authMiddleware, requestController.getById);
+requestRoutes.get("/:id/pdf", authMiddleware, requestController.pdf);
 requestRoutes.patch("/:id", authMiddleware, requestController.edit);
 requestRoutes.delete("/:id", authMiddleware, requestController.cancel);
 requestRoutes.patch(

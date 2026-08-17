@@ -21,7 +21,21 @@ const LOGO_GAP = 12;
  * of how much content came before it.
  */
 function drawSignatureFooter(doc: PDFKit.PDFDocument, requestId: string): void {
-  const pageBottom = doc.page.height - doc.page.margins.bottom;
+  // Every `.text()` call below moves pdfkit's flowing cursor (`doc.x`/`doc.y`)
+  // to just past the drawn text — even with explicit x/y — because pdfkit
+  // still runs it through LineWrapper whenever `width` is set. Since this
+  // footer draws near the physical bottom of the page, that leaves `doc.y`
+  // far past the content area's bottom margin. Save/restore the cursor so
+  // callers can keep flowing content normally right after this returns.
+  const cursorX = doc.x;
+  const cursorY = doc.y;
+
+  // `doc.page.margins.bottom` reserves MARGIN + SIGNATURE_BLOCK_HEIGHT, i.e.
+  // it already spans the whole footer zone — using it here would anchor the
+  // block SIGNATURE_BLOCK_HEIGHT too high, overlapping content that fills
+  // the page close to the reserved zone. Anchor to the true bottom instead,
+  // leaving just MARGIN as blank space below (matching the other 3 sides).
+  const pageBottom = doc.page.height - MARGIN;
   const lineY = pageBottom - SIGNATURE_BLOCK_HEIGHT + 20;
 
   // The signature block is drawn inside the reserved bottom margin (outside
@@ -57,6 +71,8 @@ function drawSignatureFooter(doc: PDFKit.PDFDocument, requestId: string): void {
     );
 
   doc.page.margins.bottom = originalBottomMargin;
+  doc.x = cursorX;
+  doc.y = cursorY;
 }
 
 export function generateWithdrawalSlipPdf(data: WithdrawalSlipDto, res: Response): void {

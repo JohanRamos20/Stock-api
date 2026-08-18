@@ -8,7 +8,6 @@ import { EditRequestUseCase } from "@application/usecases/request/edit-request.u
 import { CancelRequestUseCase } from "@application/usecases/request/cancel-request.usecase";
 import { CompleteRequestUseCase } from "@application/usecases/request/complete-request.usecase";
 import { PdfRequestUseCase } from "@application/usecases/request/pdf-request.usecase";
-import { generateWithdrawalSlipPdf } from "@infrastructure/pdf/withdrawal-slip.pdf";
 import {
   createRequestSchema,
   editRequestSchema,
@@ -108,7 +107,7 @@ export class RequestController {
     try {
       if (!req.userId || !req.userRole) throw new BusinessError("Missing or invalid authentication token", 401);
       const withdrawalSlip = await this.pdfRequestUseCase.execute(req.params.id as string, req.userId, req.userRole);
-      generateWithdrawalSlipPdf(withdrawalSlip, res);
+      res.status(200).json(withdrawalSlip);
     } catch (err) {
       next(err);
     }

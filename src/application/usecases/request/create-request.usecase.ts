@@ -1,8 +1,10 @@
 import { BusinessError } from "@domain/errors";
 import { IMaterialRepository } from "@domain/repositories/material.repository";
 import { IUnitOfWork } from "@domain/services/unit-of-work";
+import { ICacheService } from "@domain/services/cache.service";
 import { toRequestResponseDto, RequestResponseDto } from "@application/dtos/request/request-response.dto";
 import { CreateRequestDto } from "@infrastructure/validators/request.validator";
+import { ALL_REQUESTS_CACHE_PREFIX, userRequestsCachePrefix } from "./request-cache-keys";
 
 function getNextBusinessDay(from: Date): Date {
   const result = new Date(from);
@@ -17,6 +19,7 @@ export class CreateRequestUseCase {
   constructor(
     private readonly materialRepository: IMaterialRepository,
     private readonly unitOfWork: IUnitOfWork,
+    private readonly cacheService: ICacheService,
   ) {}
 
   async execute(requesterId: string, input: CreateRequestDto): Promise<RequestResponseDto> {
@@ -44,6 +47,9 @@ export class CreateRequestUseCase {
 
       return created;
     });
+
+    await this.cacheService.invalidate(userRequestsCachePrefix(requesterId));
+    await this.cacheService.invalidate(ALL_REQUESTS_CACHE_PREFIX);
 
     return toRequestResponseDto(request);
   }

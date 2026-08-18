@@ -4,14 +4,17 @@ import { RequestStatus } from "@domain/entities/request.entity";
 import { IMaterialRepository } from "@domain/repositories/material.repository";
 import { IRequestRepository } from "@domain/repositories/request.repository";
 import { IUnitOfWork } from "@domain/services/unit-of-work";
+import { ICacheService } from "@domain/services/cache.service";
 import { toRequestResponseDto, RequestResponseDto } from "@application/dtos/request/request-response.dto";
 import { EditRequestDto } from "@infrastructure/validators/request.validator";
+import { ALL_REQUESTS_CACHE_PREFIX, userRequestsCachePrefix } from "./request-cache-keys";
 
 export class EditRequestUseCase {
   constructor(
     private readonly requestRepository: IRequestRepository,
     private readonly materialRepository: IMaterialRepository,
     private readonly unitOfWork: IUnitOfWork,
+    private readonly cacheService: ICacheService,
   ) {}
 
   async execute(
@@ -56,6 +59,9 @@ export class EditRequestUseCase {
         materials: input.materials,
       });
     });
+
+    await this.cacheService.invalidate(userRequestsCachePrefix(request.userId));
+    await this.cacheService.invalidate(ALL_REQUESTS_CACHE_PREFIX);
 
     return toRequestResponseDto(updated);
   }

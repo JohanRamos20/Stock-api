@@ -7,6 +7,7 @@ import { GetRequestAllUseCase } from "@application/usecases/request/get-request-
 import { EditRequestUseCase } from "@application/usecases/request/edit-request.usecase";
 import { CancelRequestUseCase } from "@application/usecases/request/cancel-request.usecase";
 import { CompleteRequestUseCase } from "@application/usecases/request/complete-request.usecase";
+import { PdfRequestUseCase } from "@application/usecases/request/pdf-request.usecase";
 import {
   createRequestSchema,
   editRequestSchema,
@@ -22,6 +23,7 @@ export class RequestController {
     private readonly editRequestUseCase: EditRequestUseCase,
     private readonly cancelRequestUseCase: CancelRequestUseCase,
     private readonly completeRequestUseCase: CompleteRequestUseCase,
+    private readonly pdfRequestUseCase: PdfRequestUseCase,
   ) {}
 
   create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -96,6 +98,16 @@ export class RequestController {
     try {
       const request = await this.completeRequestUseCase.execute(req.params.id as string);
       res.status(200).json(request);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  pdf = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      if (!req.userId || !req.userRole) throw new BusinessError("Missing or invalid authentication token", 401);
+      const withdrawalSlip = await this.pdfRequestUseCase.execute(req.params.id as string, req.userId, req.userRole);
+      res.status(200).json(withdrawalSlip);
     } catch (err) {
       next(err);
     }

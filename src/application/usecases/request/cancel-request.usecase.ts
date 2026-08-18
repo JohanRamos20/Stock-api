@@ -3,11 +3,14 @@ import { UserRole } from "@domain/entities/user.entity";
 import { RequestStatus } from "@domain/entities/request.entity";
 import { IRequestRepository } from "@domain/repositories/request.repository";
 import { IUnitOfWork } from "@domain/services/unit-of-work";
+import { ICacheService } from "@domain/services/cache.service";
+import { ALL_REQUESTS_CACHE_PREFIX, userRequestsCachePrefix } from "./request-cache-keys";
 
 export class CancelRequestUseCase {
   constructor(
     private readonly requestRepository: IRequestRepository,
     private readonly unitOfWork: IUnitOfWork,
+    private readonly cacheService: ICacheService,
   ) {}
 
   async execute(id: string, requesterId: string, requesterRole: UserRole): Promise<void> {
@@ -28,5 +31,8 @@ export class CancelRequestUseCase {
         await materialRepository.incrementAmount(item.materialId, item.quantity);
       }
     });
+
+    await this.cacheService.invalidate(userRequestsCachePrefix(request.userId));
+    await this.cacheService.invalidate(ALL_REQUESTS_CACHE_PREFIX);
   }
 }

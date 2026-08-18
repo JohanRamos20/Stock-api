@@ -11,20 +11,22 @@ import { CancelRequestUseCase } from "@application/usecases/request/cancel-reque
 import { CompleteRequestUseCase } from "@application/usecases/request/complete-request.usecase";
 import { PdfRequestUseCase } from "@application/usecases/request/pdf-request.usecase";
 import { RequestController } from "@infrastructure/http/controllers/request.controller";
+import { RedisCacheService } from "@infrastructure/services/redis-cache.service";
 
 export function makeRequestController(): RequestController {
   const requestRepository = new PrismaRequestRepository();
   const materialRepository = new PrismaMaterialRepository();
   const userRepository = new PrismaUserRepository();
   const unitOfWork = new PrismaUnitOfWork();
+  const cacheService = new RedisCacheService();
 
-  const createRequestUseCase = new CreateRequestUseCase(materialRepository, unitOfWork);
+  const createRequestUseCase = new CreateRequestUseCase(materialRepository, unitOfWork, cacheService);
   const getRequestUseCase = new GetRequestUseCase(requestRepository);
-  const getRequestUserUseCase = new GetRequestUserUseCase(requestRepository);
-  const getRequestAllUseCase = new GetRequestAllUseCase(requestRepository);
-  const editRequestUseCase = new EditRequestUseCase(requestRepository, materialRepository, unitOfWork);
-  const cancelRequestUseCase = new CancelRequestUseCase(requestRepository, unitOfWork);
-  const completeRequestUseCase = new CompleteRequestUseCase(requestRepository);
+  const getRequestUserUseCase = new GetRequestUserUseCase(requestRepository, cacheService);
+  const getRequestAllUseCase = new GetRequestAllUseCase(requestRepository, cacheService);
+  const editRequestUseCase = new EditRequestUseCase(requestRepository, materialRepository, unitOfWork, cacheService);
+  const cancelRequestUseCase = new CancelRequestUseCase(requestRepository, unitOfWork, cacheService);
+  const completeRequestUseCase = new CompleteRequestUseCase(requestRepository, cacheService);
   const pdfRequestUseCase = new PdfRequestUseCase(requestRepository, userRepository);
 
   return new RequestController(

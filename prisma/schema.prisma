@@ -41,6 +41,7 @@ model User {
   id       String @id @default(uuid())
   name     String
   email    String @unique
+  siapp    String @unique
   password String
   role     Role
   sector   Sector

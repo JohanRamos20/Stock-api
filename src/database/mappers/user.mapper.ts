@@ -6,6 +6,7 @@ export function toDomainUser(raw: UserModel): User {
     id: raw.id,
     name: raw.name,
     email: raw.email,
+    siapp: raw.siapp,
     password: raw.password,
     role: raw.role as UserRole,
     sector: raw.sector as UserSector,

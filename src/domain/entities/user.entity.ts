@@ -12,6 +12,7 @@ export interface UserProps {
   id: string;
   name: string;
   email: string;
+  siapp: string;
   password: string;
   role: UserRole;
   sector: UserSector;
@@ -23,6 +24,7 @@ export class User {
   readonly id: string;
   readonly name: string;
   readonly email: string;
+  readonly siapp: string;
   readonly password: string;
   readonly role: UserRole;
   readonly sector: UserSector;
@@ -33,6 +35,7 @@ export class User {
     this.id = props.id;
     this.name = props.name;
     this.email = props.email;
+    this.siapp = props.siapp;
     this.password = props.password;
     this.role = props.role;
     this.sector = props.sector;
@@ -43,6 +46,7 @@ export class User {
   static create(props: UserProps): User {
     if (!props.name.trim()) throw new Error("User name must not be empty");
     if (!props.email.trim()) throw new Error("User email must not be empty");
+    if (!props.siapp.trim()) throw new Error("User siapp must not be empty");
     if (!props.password) throw new Error("User password must not be empty");
     return new User(props);
   }

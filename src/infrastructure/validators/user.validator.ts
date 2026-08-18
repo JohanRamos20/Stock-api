@@ -4,6 +4,7 @@ import { UserRole, UserSector } from "@domain/entities/user.entity";
 export const createUserSchema = z.object({
   name: z.string().trim().min(1, "name is required").max(120),
   email: z.string().trim().toLowerCase().email(),
+  siapp: z.string().trim().min(1, "siapp is required"),
   role: z.nativeEnum(UserRole),
   sector: z.nativeEnum(UserSector),
 });

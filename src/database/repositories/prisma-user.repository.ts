@@ -19,6 +19,11 @@ export class PrismaUserRepository implements IUserRepository {
     return found ? toDomainUser(found) : null;
   }
 
+  async findBySiapp(siapp: string): Promise<User | null> {
+    const found = await prisma.user.findUnique({ where: { siapp } });
+    return found ? toDomainUser(found) : null;
+  }
+
   async list(): Promise<User[]> {
     const users = await prisma.user.findMany({ orderBy: { createdAt: "desc" } });
     return users.map(toDomainUser);

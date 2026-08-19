@@ -18,7 +18,7 @@ export const loginSchema = z.object({
 
 export type LoginDto = z.infer<typeof loginSchema>;
 
-export const resetPasswordSchema = z
+export const changePasswordSchema = z
   .object({
     email: z.string().trim().toLowerCase().email(),
     currentPassword: z.string().min(1, "currentPassword is required"),
@@ -30,4 +30,4 @@ export const resetPasswordSchema = z
     path: ["confirmNewPassword"],
   });
 
-export type ResetPasswordDto = z.infer<typeof resetPasswordSchema>;
+export type ChangePasswordDto = z.infer<typeof changePasswordSchema>;

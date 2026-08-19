@@ -1,26 +1,18 @@
 import { BusinessError } from "@domain/errors";
 import { IUserRepository } from "@domain/repositories/user.repository";
 import { IPasswordHasher } from "@domain/services/password-hasher.service";
-import { GetUserByEmailUseCase } from "@application/usecases/user/get-user-by-email.usecase";
-import { ResetPasswordDto } from "@infrastructure/validators/user.validator";
 
 export class ResetPasswordUseCase {
   constructor(
     private readonly userRepository: IUserRepository,
-    private readonly getUserByEmailUseCase: GetUserByEmailUseCase,
     private readonly passwordHasher: IPasswordHasher,
   ) {}
 
-  async execute(input: ResetPasswordDto): Promise<void> {
-    const user = await this.getUserByEmailUseCase.execute(input.email).catch((error) => {
-      if (error instanceof BusinessError) throw new BusinessError("Invalid credentials", 401);
-      throw error;
-    });
+  async execute(userId: string): Promise<void> {
+    const user = await this.userRepository.findById(userId);
+    if (!user) throw new BusinessError(`User not found: ${userId}`, 404);
 
-    const isCurrentPasswordValid = await this.passwordHasher.compare(input.currentPassword, user.password);
-    if (!isCurrentPasswordValid) throw new BusinessError("Invalid credentials", 401);
-
-    const hashedPassword = await this.passwordHasher.hash(input.newPassword);
+    const hashedPassword = await this.passwordHasher.hash(user.siapp);
     await this.userRepository.updatePassword(user.id, hashedPassword);
   }
 }

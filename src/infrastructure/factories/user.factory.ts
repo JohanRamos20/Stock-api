@@ -6,6 +6,7 @@ import { GetUserByEmailUseCase } from "@application/usecases/user/get-user-by-em
 import { GetUserByIdUseCase } from "@application/usecases/user/get-user-by-id.usecase";
 import { ListUsersUseCase } from "@application/usecases/user/list-users.usecase";
 import { LoginUseCase } from "@application/usecases/user/login.usecase";
+import { ChangePasswordUseCase } from "@application/usecases/user/change-password.usecase";
 import { ResetPasswordUseCase } from "@application/usecases/user/reset-password.usecase";
 import { UserController } from "@infrastructure/http/controllers/user.controller";
 
@@ -18,13 +19,15 @@ export function makeUserController(): UserController {
   const createUserUseCase = new CreateUserUseCase(userRepository, passwordHasher);
   const getUserByIdUseCase = new GetUserByIdUseCase(userRepository);
   const listUsersUseCase = new ListUsersUseCase(userRepository);
-  const resetPasswordUseCase = new ResetPasswordUseCase(userRepository, getUserByEmailUseCase, passwordHasher);
+  const changePasswordUseCase = new ChangePasswordUseCase(userRepository, getUserByEmailUseCase, passwordHasher);
+  const resetPasswordUseCase = new ResetPasswordUseCase(userRepository, passwordHasher);
   const loginUseCase = new LoginUseCase(userRepository, getUserByEmailUseCase, passwordHasher, tokenService);
 
   return new UserController(
     createUserUseCase,
     getUserByIdUseCase,
     listUsersUseCase,
+    changePasswordUseCase,
     resetPasswordUseCase,
     loginUseCase,
   );

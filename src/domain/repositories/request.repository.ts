@@ -31,7 +31,7 @@ export interface IRequestRepository {
   findById(id: string): Promise<Request | null>;
   update(id: string, data: UpdateRequestData): Promise<Request>;
   cancel(id: string): Promise<Request>;
-  complete(id: string): Promise<Request>;
+  complete(id: string, adminId: string): Promise<Request>;
   findManyByUserId(userId: string, page: PageRequest): Promise<PageResult<Request>>;
   findMany(page: PageRequest): Promise<PageResult<Request>>;
 }

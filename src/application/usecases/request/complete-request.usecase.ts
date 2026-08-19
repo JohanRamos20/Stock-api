@@ -11,7 +11,7 @@ export class CompleteRequestUseCase {
     private readonly cacheService: ICacheService,
   ) {}
 
-  async execute(id: string): Promise<RequestResponseDto> {
+  async execute(id: string, adminId: string): Promise<RequestResponseDto> {
     const request = await this.requestRepository.findById(id);
     if (!request) throw new BusinessError(`Request not found: ${id}`, 404);
 
@@ -19,7 +19,7 @@ export class CompleteRequestUseCase {
       throw new BusinessError(`Request is already ${request.status}`, 409);
     }
 
-    const completed = await this.requestRepository.complete(id);
+    const completed = await this.requestRepository.complete(id, adminId);
 
     await this.cacheService.invalidate(userRequestsCachePrefix(request.userId));
     await this.cacheService.invalidate(ALL_REQUESTS_CACHE_PREFIX);

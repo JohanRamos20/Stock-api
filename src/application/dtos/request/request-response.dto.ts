@@ -12,6 +12,7 @@ export interface RequestMaterialResponseDto {
 export interface RequestResponseDto {
   id: string;
   userId: string;
+  adminId: string | null;
   prazo: Date;
   status: RequestStatus;
   materials: RequestMaterialResponseDto[];
@@ -30,6 +31,7 @@ export function toRequestResponseDto(request: Request): RequestResponseDto {
   return {
     id: request.id,
     userId: request.userId,
+    adminId: request.adminId,
     prazo: request.prazo,
     status: request.status,
     materials: request.materials.map((material) => ({

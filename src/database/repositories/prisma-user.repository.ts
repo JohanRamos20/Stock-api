@@ -25,7 +25,7 @@ export class PrismaUserRepository implements IUserRepository {
   }
 
   async list(): Promise<User[]> {
-    const users = await prisma.user.findMany({ orderBy: { createdAt: "desc" } });
+    const users = await prisma.user.findMany({ orderBy: { createdAt: "desc"}, where: { role:"USER" } });
     return users.map(toDomainUser);
   }
 

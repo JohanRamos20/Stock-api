@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { BusinessError } from "@domain/errors";
 import { CreateMaterialUseCase } from "@application/usecases/material/create-material.usecase";
 import { EditMaterialUseCase } from "@application/usecases/material/edit-material.usecase";
 import { DeleteMaterialUseCase } from "@application/usecases/material/delete-material.usecase";
@@ -42,9 +43,10 @@ export class MaterialController {
     }
   };
 
-  getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getAll = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const materials = await this.getAllMaterialsUseCase.execute();
+      if (!req.userRole) throw new BusinessError("Missing or invalid authentication token", 401);
+      const materials = await this.getAllMaterialsUseCase.execute(req.userRole);
       res.status(200).json(materials);
     } catch (err) {
       next(err);

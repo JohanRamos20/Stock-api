@@ -22,7 +22,7 @@ export interface IMaterialRepository {
   findByIds(ids: string[]): Promise<Material[]>;
   update(id: string, data: UpdateMaterialData): Promise<Material>;
   delete(id: string): Promise<void>;
-  list(): Promise<Material[]>;
+  list(filters?: { onlyInStock?: boolean }): Promise<Material[]>;
   isInUse(id: string): Promise<boolean>;
   decrementAmount(id: string, quantity: number): Promise<Material>;
   incrementAmount(id: string, quantity: number): Promise<Material>;

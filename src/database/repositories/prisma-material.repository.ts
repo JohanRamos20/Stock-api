@@ -34,8 +34,11 @@ export class PrismaMaterialRepository implements IMaterialRepository {
     await this.db.material.delete({ where: { id } });
   }
 
-  async list(): Promise<Material[]> {
-    const materials = await this.db.material.findMany({ orderBy: { createdAt: "desc" } });
+  async list(filters?: { onlyInStock?: boolean }): Promise<Material[]> {
+    const materials = await this.db.material.findMany({
+      where: filters?.onlyInStock ? { amount: { gt: 0 } } : undefined,
+      orderBy: { createdAt: "desc" },
+    });
     return materials.map(toDomainMaterial);
   }
 

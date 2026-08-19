@@ -25,11 +25,20 @@ export class PrismaUserRepository implements IUserRepository {
   }
 
   async list(): Promise<User[]> {
-    const users = await prisma.user.findMany({ orderBy: { createdAt: "desc" } });
+    const users = await prisma.user.findMany({ orderBy: { createdAt: "desc"}, where: { role:"USER" } });
     return users.map(toDomainUser);
   }
 
   async updatePassword(id: string, hashedPassword: string): Promise<void> {
     await prisma.user.update({ where: { id }, data: { password: hashedPassword } });
+  }
+
+  async delete(id: string): Promise<void> {
+    await prisma.user.delete({ where: { id } });
+  }
+
+  async hasRequests(id: string): Promise<boolean> {
+    const count = await prisma.request.count({ where: { userId: id } });
+    return count > 0;
   }
 }

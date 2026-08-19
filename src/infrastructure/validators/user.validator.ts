@@ -31,3 +31,9 @@ export const changePasswordSchema = z
   });
 
 export type ChangePasswordDto = z.infer<typeof changePasswordSchema>;
+
+export const deleteUserSchema = z.object({
+  password: z.string().min(1, "password is required"),
+});
+
+export type DeleteUserDto = z.infer<typeof deleteUserSchema>;

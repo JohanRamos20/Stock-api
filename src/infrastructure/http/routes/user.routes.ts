@@ -12,6 +12,7 @@ userRoutes.get("/", authMiddleware, requireRole(UserRole.ADMIN), userController.
 userRoutes.get("/me", authMiddleware, userController.getById);
 userRoutes.post("/password/reset", userController.changePassword);
 userRoutes.patch("/:id/password/reset", authMiddleware, requireRole(UserRole.ADMIN), userController.resetPassword);
+userRoutes.delete("/:id", authMiddleware, requireRole(UserRole.ADMIN), userController.delete);
 userRoutes.post("/login", userController.login);
 
 export { userRoutes };

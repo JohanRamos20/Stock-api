@@ -6,7 +6,8 @@ import { ListUsersUseCase } from "@application/usecases/user/list-users.usecase"
 import { LoginUseCase } from "@application/usecases/user/login.usecase";
 import { ChangePasswordUseCase } from "@application/usecases/user/change-password.usecase";
 import { ResetPasswordUseCase } from "@application/usecases/user/reset-password.usecase";
-import { createUserSchema, loginSchema, changePasswordSchema } from "@infrastructure/validators/user.validator";
+import { DeleteUserUseCase } from "@application/usecases/user/delete-user.usecase";
+import { createUserSchema, loginSchema, changePasswordSchema, deleteUserSchema } from "@infrastructure/validators/user.validator";
 
 export class UserController {
   constructor(
@@ -15,6 +16,7 @@ export class UserController {
     private readonly listUsersUseCase: ListUsersUseCase,
     private readonly changePasswordUseCase: ChangePasswordUseCase,
     private readonly resetPasswordUseCase: ResetPasswordUseCase,
+    private readonly deleteUserUseCase: DeleteUserUseCase,
     private readonly loginUseCase: LoginUseCase,
   ) {}
 
@@ -60,6 +62,17 @@ export class UserController {
   resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       await this.resetPasswordUseCase.execute(req.params.id as string);
+      res.status(204).send();
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  delete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      if (!req.userId) throw new BusinessError("Missing or invalid authentication token", 401);
+      const dto = deleteUserSchema.parse(req.body);
+      await this.deleteUserUseCase.execute(req.params.id as string, req.userId, dto.password);
       res.status(204).send();
     } catch (err) {
       next(err);

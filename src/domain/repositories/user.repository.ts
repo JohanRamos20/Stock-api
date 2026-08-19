@@ -16,4 +16,6 @@ export interface IUserRepository {
   findBySiapp(siapp: string): Promise<User | null>;
   list(): Promise<User[]>;
   updatePassword(id: string, hashedPassword: string): Promise<void>;
+  delete(id: string): Promise<void>;
+  hasRequests(id: string): Promise<boolean>;
 }

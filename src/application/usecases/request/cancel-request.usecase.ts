@@ -6,6 +6,8 @@ import { IUnitOfWork } from "@domain/services/unit-of-work";
 import { ICacheService } from "@domain/services/cache.service";
 import { ALL_REQUESTS_CACHE_PREFIX, userRequestsCachePrefix } from "./request-cache-keys";
 
+const CANCELABLE_STATUSES: RequestStatus[] = [RequestStatus.PENDING, RequestStatus.SEPARATED];
+
 export class CancelRequestUseCase {
   constructor(
     private readonly requestRepository: IRequestRepository,
@@ -21,12 +23,12 @@ export class CancelRequestUseCase {
       throw new BusinessError("You do not have permission to access this request", 403);
     }
 
-    if (request.status !== RequestStatus.PENDING) {
+    if (!CANCELABLE_STATUSES.includes(request.status)) {
       throw new BusinessError(`Request is already ${request.status} and cannot be canceled`, 409);
     }
 
     await this.unitOfWork.run(async ({ requestRepository, materialRepository }) => {
-      await requestRepository.cancel(id);
+      await requestRepository.updateStatus(id, RequestStatus.CANCELED);
       for (const item of request.materials) {
         await materialRepository.incrementAmount(item.materialId, item.quantity);
       }

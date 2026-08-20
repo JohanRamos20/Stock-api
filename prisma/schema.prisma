@@ -22,6 +22,7 @@ enum Sector {
 
 enum RequestStatus {
   PENDING
+  SEPARATED
   COMPLETED
   CANCELED
 }
@@ -49,21 +50,25 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  requests          Request[] @relation("RequestRequester")
-  completedRequests Request[] @relation("RequestAdmin")
+  requests               Request[] @relation("RequestRequester")
+  completedRequests      Request[] @relation("RequestAdmin")
+  requestsCreatedAsAdmin Request[] @relation("RequestCreatedByAdmin")
 
   @@map("users")
 }
 
 model Request {
-  id        String        @id @default(uuid())
-  userId    String        @map("user_id")
-  user      User          @relation("RequestRequester", fields: [userId], references: [id])
-  adminId   String?       @map("admin_id")
-  admin     User?         @relation("RequestAdmin", fields: [adminId], references: [id], onDelete: SetNull)
-  adminName String?       @map("admin_name")
-  prazo     DateTime
-  status    RequestStatus @default(PENDING)
+  id                  String        @id @default(uuid())
+  userId              String        @map("user_id")
+  user                User          @relation("RequestRequester", fields: [userId], references: [id])
+  adminId             String?       @map("admin_id")
+  admin               User?         @relation("RequestAdmin", fields: [adminId], references: [id], onDelete: SetNull)
+  adminName           String?       @map("admin_name")
+  createdByAdminId    String?       @map("created_by_admin_id")
+  createdByAdmin      User?         @relation("RequestCreatedByAdmin", fields: [createdByAdminId], references: [id], onDelete: SetNull)
+  createdByAdminName  String?       @map("created_by_admin_name")
+  prazo               DateTime
+  status              RequestStatus @default(PENDING)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

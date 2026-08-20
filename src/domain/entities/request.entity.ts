@@ -2,6 +2,7 @@ import { MaterialCategory, UnitType } from "./material.entity";
 
 export enum RequestStatus {
   PENDING = "PENDING",
+  SEPARATED = "SEPARATED",
   COMPLETED = "COMPLETED",
   CANCELED = "CANCELED",
 }
@@ -21,6 +22,8 @@ export interface RequestProps {
   userId: string;
   adminId?: string | null;
   adminName?: string | null;
+  createdByAdminId?: string | null;
+  createdByAdminName?: string | null;
   prazo: Date;
   status: RequestStatus;
   materials: RequestMaterialProps[];
@@ -33,6 +36,8 @@ export class Request {
   readonly userId: string;
   readonly adminId: string | null;
   readonly adminName: string | null;
+  readonly createdByAdminId: string | null;
+  readonly createdByAdminName: string | null;
   readonly prazo: Date;
   readonly status: RequestStatus;
   readonly materials: RequestMaterialProps[];
@@ -44,6 +49,8 @@ export class Request {
     this.userId = props.userId;
     this.adminId = props.adminId ?? null;
     this.adminName = props.adminName ?? null;
+    this.createdByAdminId = props.createdByAdminId ?? null;
+    this.createdByAdminName = props.createdByAdminName ?? null;
     this.prazo = props.prazo;
     this.status = props.status;
     this.materials = props.materials;

@@ -1,6 +1,6 @@
 import { prisma } from "@database/prisma";
 import { toDomainRequest } from "@database/mappers/request.mapper";
-import { Request } from "@domain/entities/request.entity";
+import { Request, RequestStatus } from "@domain/entities/request.entity";
 import {
   CreateRequestData,
   IRequestRepository,
@@ -22,6 +22,8 @@ export class PrismaRequestRepository implements IRequestRepository {
       data: {
         userId: data.userId,
         prazo: data.prazo,
+        createdByAdminId: data.createdByAdminId ?? null,
+        createdByAdminName: data.createdByAdminName ?? null,
         materials: {
           create: data.materials.map((material) => ({
             materialId: material.materialId,
@@ -61,13 +63,13 @@ export class PrismaRequestRepository implements IRequestRepository {
     return toDomainRequest(updated);
   }
 
-  async cancel(id: string): Promise<Request> {
-    const canceled = await this.db.request.update({
+  async updateStatus(id: string, status: RequestStatus): Promise<Request> {
+    const updated = await this.db.request.update({
       where: { id },
-      data: { status: "CANCELED" },
+      data: { status },
       include: materialsInclude,
     });
-    return toDomainRequest(canceled);
+    return toDomainRequest(updated);
   }
 
   async complete(id: string, adminId: string, adminName: string): Promise<Request> {

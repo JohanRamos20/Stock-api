@@ -26,7 +26,7 @@ export function makeRequestController(): RequestController {
   const getRequestAllUseCase = new GetRequestAllUseCase(requestRepository, cacheService);
   const editRequestUseCase = new EditRequestUseCase(requestRepository, materialRepository, unitOfWork, cacheService);
   const cancelRequestUseCase = new CancelRequestUseCase(requestRepository, unitOfWork, cacheService);
-  const completeRequestUseCase = new CompleteRequestUseCase(requestRepository, cacheService);
+  const completeRequestUseCase = new CompleteRequestUseCase(requestRepository, userRepository, cacheService);
   const pdfRequestUseCase = new PdfRequestUseCase(requestRepository, userRepository);
 
   return new RequestController(

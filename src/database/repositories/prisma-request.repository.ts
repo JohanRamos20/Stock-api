@@ -70,10 +70,10 @@ export class PrismaRequestRepository implements IRequestRepository {
     return toDomainRequest(canceled);
   }
 
-  async complete(id: string, adminId: string): Promise<Request> {
+  async complete(id: string, adminId: string, adminName: string): Promise<Request> {
     const completed = await this.db.request.update({
       where: { id },
-      data: { status: "COMPLETED", adminId },
+      data: { status: "COMPLETED", adminId, adminName },
       include: materialsInclude,
     });
     return toDomainRequest(completed);

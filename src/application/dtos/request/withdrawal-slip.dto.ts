@@ -19,6 +19,7 @@ export interface WithdrawalSlipDto {
   sector: string;
   deadline: string;
   createdAt: string;
+  requestedByAdminName: string | null;
   materials: WithdrawalSlipMaterialDto[];
 }
 
@@ -29,6 +30,7 @@ export function toWithdrawalSlipDto(request: Request, requester: User): Withdraw
     sector: SECTOR_LABELS[requester.sector],
     deadline: request.prazo.toLocaleDateString("pt-BR"),
     createdAt: request.createdAt.toLocaleString("pt-BR"),
+    requestedByAdminName: request.createdByAdminName ?? null,
     materials: request.materials.map((item) => ({
       name: item.material.name,
       category: item.material.category,

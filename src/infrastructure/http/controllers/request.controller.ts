@@ -6,6 +6,7 @@ import { GetRequestUserUseCase } from "@application/usecases/request/get-request
 import { GetRequestAllUseCase } from "@application/usecases/request/get-request-all.usecase";
 import { EditRequestUseCase } from "@application/usecases/request/edit-request.usecase";
 import { CancelRequestUseCase } from "@application/usecases/request/cancel-request.usecase";
+import { SeparateRequestUseCase } from "@application/usecases/request/separate-request.usecase";
 import { CompleteRequestUseCase } from "@application/usecases/request/complete-request.usecase";
 import { PdfRequestUseCase } from "@application/usecases/request/pdf-request.usecase";
 import {
@@ -22,15 +23,16 @@ export class RequestController {
     private readonly getRequestAllUseCase: GetRequestAllUseCase,
     private readonly editRequestUseCase: EditRequestUseCase,
     private readonly cancelRequestUseCase: CancelRequestUseCase,
+    private readonly separateRequestUseCase: SeparateRequestUseCase,
     private readonly completeRequestUseCase: CompleteRequestUseCase,
     private readonly pdfRequestUseCase: PdfRequestUseCase,
   ) {}
 
   create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      if (!req.userId) throw new BusinessError("Missing or invalid authentication token", 401);
+      if (!req.userId || !req.userRole) throw new BusinessError("Missing or invalid authentication token", 401);
       const dto = createRequestSchema.parse(req.body);
-      const request = await this.createRequestUseCase.execute(req.userId, dto);
+      const request = await this.createRequestUseCase.execute(req.userId, req.userRole, dto);
       res.status(201).json(request);
     } catch (err) {
       next(err);
@@ -89,6 +91,16 @@ export class RequestController {
       if (!req.userId || !req.userRole) throw new BusinessError("Missing or invalid authentication token", 401);
       await this.cancelRequestUseCase.execute(req.params.id as string, req.userId, req.userRole);
       res.status(204).send();
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  separate = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      if (!req.userId) throw new BusinessError("Missing or invalid authentication token", 401);
+      const request = await this.separateRequestUseCase.execute(req.params.id as string);
+      res.status(200).json(request);
     } catch (err) {
       next(err);
     }

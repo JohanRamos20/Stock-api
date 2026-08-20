@@ -15,6 +15,12 @@ requestRoutes.get("/:id/withdrawal-slip", authMiddleware, requestController.pdf)
 requestRoutes.patch("/:id", authMiddleware, requestController.edit);
 requestRoutes.delete("/:id", authMiddleware, requestController.cancel);
 requestRoutes.patch(
+  "/:id/separate",
+  authMiddleware,
+  requireRole(UserRole.ADMIN),
+  requestController.separate,
+);
+requestRoutes.patch(
   "/:id/complete",
   authMiddleware,
   requireRole(UserRole.ADMIN),

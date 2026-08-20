@@ -8,6 +8,7 @@ const requestMaterialSchema = z.object({
 export const createRequestSchema = z.object({
   prazo: z.coerce.date().optional(),
   materials: z.array(requestMaterialSchema).min(1, "at least one material is required"),
+  userId: z.string().uuid().optional(),
 });
 
 export type CreateRequestDto = z.infer<typeof createRequestSchema>;

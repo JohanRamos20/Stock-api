@@ -8,6 +8,7 @@ import { GetRequestUserUseCase } from "@application/usecases/request/get-request
 import { GetRequestAllUseCase } from "@application/usecases/request/get-request-all.usecase";
 import { EditRequestUseCase } from "@application/usecases/request/edit-request.usecase";
 import { CancelRequestUseCase } from "@application/usecases/request/cancel-request.usecase";
+import { SeparateRequestUseCase } from "@application/usecases/request/separate-request.usecase";
 import { CompleteRequestUseCase } from "@application/usecases/request/complete-request.usecase";
 import { PdfRequestUseCase } from "@application/usecases/request/pdf-request.usecase";
 import { RequestController } from "@infrastructure/http/controllers/request.controller";
@@ -20,12 +21,13 @@ export function makeRequestController(): RequestController {
   const unitOfWork = new PrismaUnitOfWork();
   const cacheService = new RedisCacheService();
 
-  const createRequestUseCase = new CreateRequestUseCase(materialRepository, unitOfWork, cacheService);
+  const createRequestUseCase = new CreateRequestUseCase(materialRepository, userRepository, unitOfWork, cacheService);
   const getRequestUseCase = new GetRequestUseCase(requestRepository);
   const getRequestUserUseCase = new GetRequestUserUseCase(requestRepository, cacheService);
   const getRequestAllUseCase = new GetRequestAllUseCase(requestRepository, cacheService);
   const editRequestUseCase = new EditRequestUseCase(requestRepository, materialRepository, unitOfWork, cacheService);
   const cancelRequestUseCase = new CancelRequestUseCase(requestRepository, unitOfWork, cacheService);
+  const separateRequestUseCase = new SeparateRequestUseCase(requestRepository, cacheService);
   const completeRequestUseCase = new CompleteRequestUseCase(requestRepository, userRepository, cacheService);
   const pdfRequestUseCase = new PdfRequestUseCase(requestRepository, userRepository);
 
@@ -36,6 +38,7 @@ export function makeRequestController(): RequestController {
     getRequestAllUseCase,
     editRequestUseCase,
     cancelRequestUseCase,
+    separateRequestUseCase,
     completeRequestUseCase,
     pdfRequestUseCase,
   );

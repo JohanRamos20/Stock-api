@@ -40,6 +40,15 @@ export class UserController {
     }
   };
 
+  getUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const user = await this.getUserByIdUseCase.execute(req.params.id as string);
+      res.status(200).json(user);
+    } catch (err) {
+      next(err);
+    }
+  };
+
   list = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const users = await this.listUsersUseCase.execute();

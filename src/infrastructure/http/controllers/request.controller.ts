@@ -96,7 +96,8 @@ export class RequestController {
 
   complete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const request = await this.completeRequestUseCase.execute(req.params.id as string);
+      if (!req.userId) throw new BusinessError("Missing or invalid authentication token", 401);
+      const request = await this.completeRequestUseCase.execute(req.params.id as string, req.userId);
       res.status(200).json(request);
     } catch (err) {
       next(err);

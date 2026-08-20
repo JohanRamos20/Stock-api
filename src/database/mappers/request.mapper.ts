@@ -14,6 +14,8 @@ interface RawRequestMaterial {
 interface RawRequest {
   id: string;
   userId: string;
+  adminId: string | null;
+  adminName: string | null;
   prazo: Date;
   status: string;
   materials: RawRequestMaterial[];
@@ -25,6 +27,8 @@ export function toDomainRequest(raw: RawRequest): Request {
   return Request.create({
     id: raw.id,
     userId: raw.userId,
+    adminId: raw.adminId,
+    adminName: raw.adminName,
     prazo: raw.prazo,
     status: raw.status as RequestStatus,
     materials: raw.materials.map((requestMaterial) => ({

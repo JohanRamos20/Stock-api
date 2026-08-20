@@ -10,6 +10,7 @@ const userController = makeUserController();
 userRoutes.post("/", authMiddleware, requireRole(UserRole.ADMIN), userController.create);
 userRoutes.get("/", authMiddleware, requireRole(UserRole.ADMIN), userController.list);
 userRoutes.get("/me", authMiddleware, userController.getById);
+userRoutes.get("/:id", authMiddleware, requireRole(UserRole.ADMIN), userController.getUserById);
 userRoutes.post("/password/reset", userController.changePassword);
 userRoutes.patch("/:id/password/reset", authMiddleware, requireRole(UserRole.ADMIN), userController.resetPassword);
 userRoutes.delete("/:id", authMiddleware, requireRole(UserRole.ADMIN), userController.delete);

@@ -19,6 +19,8 @@ export interface RequestMaterialProps {
 export interface RequestProps {
   id: string;
   userId: string;
+  adminId?: string | null;
+  adminName?: string | null;
   prazo: Date;
   status: RequestStatus;
   materials: RequestMaterialProps[];
@@ -29,6 +31,8 @@ export interface RequestProps {
 export class Request {
   readonly id: string;
   readonly userId: string;
+  readonly adminId: string | null;
+  readonly adminName: string | null;
   readonly prazo: Date;
   readonly status: RequestStatus;
   readonly materials: RequestMaterialProps[];
@@ -38,6 +42,8 @@ export class Request {
   private constructor(props: RequestProps) {
     this.id = props.id;
     this.userId = props.userId;
+    this.adminId = props.adminId ?? null;
+    this.adminName = props.adminName ?? null;
     this.prazo = props.prazo;
     this.status = props.status;
     this.materials = props.materials;
